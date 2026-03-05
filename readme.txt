@@ -42,6 +42,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Changelog ==
 
+= 1.7.1 =
+* Cocoonリスペクトガードのロジックを修正
+* Coocoon環境下での使用時に設定画面へ無効化中のメッセージを表示する対応を追加しました。
 = 1.7.0 =
 * WebP変換および圧縮機能を実装。
 * アイキャッチのファイルサイズを劇的に軽量化。

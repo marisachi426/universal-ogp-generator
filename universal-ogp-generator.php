@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Universal OGP Generator - Hybrid Font Edition -
  * Description: あらゆるテーマでアイキャッチを自動生成。WebP圧縮・名前の漢字欠け防止フォントエンジン搭載。
- * Version: 1.7.0
+ * Version: 1.7.1
  * Author: Yuuga Tamekuni
  * License: GPL2
  */
@@ -167,8 +167,6 @@ add_action('save_post', function($post_id) {
  * 設定画面メニュー
  */
 add_action('admin_menu', function() {
-    $theme = wp_get_theme();
-    if ($theme->get_template() === 'cocoon-master') return;
     add_options_page('Universal OGP 設定', 'Universal OGP 設定', 'manage_options', 'ttfi-settings', 'ttfi_render_page');
 });
 
@@ -180,7 +178,28 @@ add_action('admin_init', function() {
     register_setting('ttfi_group', 'ttfi_font_url');
 });
 
+/**
+ * 設定画面のレンダリング（Cocoonリスペクト・メッセージ付き）
+ */
 function ttfi_render_page() {
+    // 1. まずCocoonかどうかをチェック
+    $theme = wp_get_theme();
+    if ($theme->get_template() === 'cocoon-master') {
+        ?>
+        <div class="wrap">
+            <h1>Universal OGP Generator</h1>
+            <div class="notice notice-warning">
+                <p>
+                    <strong>リスペクト・ガード発動：</strong> お使いのテーマ「Cocoon」には、既に強力なアイキャッチ生成機能が搭載されています。<br>
+                    このプラグインはCocoonの精神を他テーマへ解放するためのものです。Cocoon環境下では競合を避けるため、設定を無効化しています。
+                </p>
+            </div>
+        </div>
+        <?php
+        return; // Cocoonならここで終了
+    }
+
+    // 2. Cocoon以外なら、通常の設定画面を表示
     ?>
     <div class="wrap">
         <h1>Universal OGP Generator <small>- Hybrid Font Edition -</small></h1>
@@ -205,6 +224,7 @@ function ttfi_render_page() {
 /**
  * 投稿編集画面のメタボックス
  */
+
 add_action('add_meta_boxes', function() {
     $theme = wp_get_theme();
     if ($theme->get_template() === 'cocoon-master') return;
